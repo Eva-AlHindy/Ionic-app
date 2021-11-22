@@ -13,6 +13,7 @@ export class AppRoot {
           <ion-route url="/notes" component="app-home" />
           <ion-route url="/notes/:id" component="app-detail" />
         </ion-router>
+        <ion-alert-controller />
         <ion-nav />
       </ion-app>
     );
