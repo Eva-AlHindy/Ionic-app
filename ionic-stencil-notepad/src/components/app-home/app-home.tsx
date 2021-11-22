@@ -9,6 +9,7 @@ export class AppHome {
   addNote() {
     const alertCtrl = document.querySelector('ion-alert-controller');
     console.log(alertCtrl);
+    console.log("fix");
   }
   render() {
     return [
