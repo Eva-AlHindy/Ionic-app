@@ -1,23 +1,53 @@
-import { Component, h } from '@stencil/core';
+import { Component, State, h } from '@stencil/core';
+import { Note } from '../../interfaces/note';
+import { NotesService } from '../../services/notes';
+
 
 @Component({
   tag: 'app-home',
   styleUrl: 'app-home.css',
 })
 export class AppHome {
-  componentDidLoad() {}
-  addNote() {
-    const alertCtrl = document.querySelector('ion-alert-controller');
-    console.log(alertCtrl);
-    console.log("fix");
+  @State() notes: Note[] = [];
+
+  async componentDidLoad() {
+    this.notes = await NotesService.load();
   }
+
+  async addNote() {
+    const alertCtrl = document.querySelector('ion-alert-controller');
+    let alert = await alertCtrl.create({
+      header: 'New Note',
+      message: 'What should the title of this note be?',
+      inputs: [
+        {
+          type: 'text',
+          name: 'title',
+        },
+      ],
+      buttons: [
+        {
+          text: 'Cancel',
+        },
+        {
+          text: 'Save',
+          handler: async (data) => {
+            NotesService.createNote(data.title);
+            this.notes = [...(await NotesService.load())];
+          },
+        },
+      ],
+    });
+    alert.present();
+  }
+
   render() {
     return [
       <ion-header>
         <ion-toolbar color="primary">
           <ion-title>Notes</ion-title>
           <ion-buttons slot="end">
-            <ion-button>
+            <ion-button onClick={() => this.addNote()}>
               <ion-icon slot="icon-only" name="clipboard" />
             </ion-button>
           </ion-buttons>
@@ -25,9 +55,16 @@ export class AppHome {
       </ion-header>,
       <ion-content>
         <ion-list>
-          <ion-item button detail>
-            <ion-label>Title goes here</ion-label>
-          </ion-item>
+        {this.notes.map((note) => (
+            <ion-item
+              button
+              detail
+              href={`/notes/${note.id}`}
+              routerDirection="forward"
+            >
+              <ion-label>{note.title}</ion-label>
+            </ion-item>
+          ))}
         </ion-list>
       </ion-content>,
     ];
