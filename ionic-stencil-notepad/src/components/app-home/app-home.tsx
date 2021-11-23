@@ -1,7 +1,7 @@
 import { Component, State, h } from '@stencil/core';
 import { Note } from '../../interfaces/note';
 import { NotesService } from '../../services/notes';
-
+import { alertController } from '@ionic/core';
 
 @Component({
   tag: 'app-home',
@@ -9,14 +9,17 @@ import { NotesService } from '../../services/notes';
 })
 export class AppHome {
   @State() notes: Note[] = [];
+  public navCtrl = document.querySelector("ion-router");
 
   async componentDidLoad() {
-    this.notes = await NotesService.load();
+     this.navCtrl.addEventListener("ionRouteDidChange", async () => {
+      this.notes = [...(await NotesService.load())];
+    });
   }
 
   async addNote() {
-    const alertCtrl = document.querySelector('ion-alert-controller');
-    let alert = await alertCtrl.create({
+    //const alertCtrl = document.querySelector('ion-alert-controller'); 
+    let alert = await alertController.create({
       header: 'New Note',
       message: 'What should the title of this note be?',
       inputs: [
@@ -33,7 +36,9 @@ export class AppHome {
           text: 'Save',
           handler: async (data) => {
             NotesService.createNote(data.title);
+            console.log(data.title);
             this.notes = [...(await NotesService.load())];
+            console.log(this.notes);
           },
         },
       ],
