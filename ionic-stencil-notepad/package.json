@@ -23,6 +23,7 @@
     "puppeteer": "^10.0.0"
   },
   "dependencies": {
-    "@stencil/router": "^1.0.1"
+    "@stencil/router": "^1.0.1",
+    "jetifier": "^2.0.0"
   }
 }

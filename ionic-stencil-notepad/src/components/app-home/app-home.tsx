@@ -17,6 +17,10 @@ export class AppHome {
     });
   }
 
+  /*componentWillUpdate() {
+    console.log('Notes changed, I will update...');
+  }*/
+
   async addNote() {
     //const alertCtrl = document.querySelector('ion-alert-controller'); 
     let alert = await alertController.create({
